@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import ProfileCard from "./ProfileCard";
 import "./App.css";
 
@@ -6,8 +7,24 @@ function App() {
   const [likes, setLikes] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
 
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
   return (
-    <div className="app">
+    <div className={`app ${darkMode ? "dark-mode" : "light-mode"}`}>
+      <button
+        className="theme-toggle"
+        onClick={() => setDarkMode((prev) => !prev)}
+        aria-label="Switch color theme"
+      >
+        {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      </button>
+
       <h1>My Developer Profile</h1>
 
       <p className="subtitle">
@@ -33,8 +50,8 @@ function App() {
         )}
 
         <button
-          onClick={() => setLikes(likes + 1)}
-          style={{ marginTop: "15px" }}
+          className="like-button"
+          onClick={() => setLikes((prev) => prev + 1)}
         >
           ❤️ Like {likes}
         </button>
